@@ -8,9 +8,11 @@ import eccezioni.EccezionePosizioneNonValida;
 import eccezioni.EccezionePosizioneOccupata;
 import eccezioni.EccezionePosizioneVuota;
 import eccezioni.EccezioneRipianoNonValido;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utilita.ConsoleInput;
 import utilita.Menu;
 import utilita.Ordinatore;
 
@@ -30,7 +32,8 @@ public class App
         int voceScelta;
         Scaffale s1=new Scaffale(); //creo lo scaffale vuoto
         int esito;
-        Scanner tastiera=new Scanner(System.in);
+        //Scanner tastiera=new Scanner(System.in);
+        ConsoleInput tastiera = new  ConsoleInput();
         String titolo,autore;
         int numeroPagine;
         Libro lib;
@@ -56,54 +59,122 @@ public class App
             voceScelta=menu.sceltaMenu();
             switch (voceScelta) 
             {
-                case 0:
+                case 0://Esci
                     System.out.println("Arrivederci!");    
                     break;
-                case 1:
+                case 1://Visualizza volume
                     System.out.println(s1.toString());
                     break;
-                case 2:
-                    //svuoto buffer input
-                    System.out.println("Premi invio per continuare...");
-                    tastiera.nextLine();
-                    System.out.println("Titolo --> ");
-                    titolo=tastiera.nextLine();
-                    System.out.println("Autore --> ");
-                    autore=tastiera.nextLine();
-                    System.out.println("Numero pagine --> ");
-                    numeroPagine=tastiera.nextInt();
-                    System.out.println("Ripiano (0..4) --> ");
-                    ripiano=tastiera.nextInt();
-                    System.out.println("Posizione (0..14) --> ");
-                    posizione=tastiera.nextInt();  
-                
-                    try 
+                case 2://Aggiungi volume
+                    try
                     {
-                        s1.setLibro(new Libro(titolo,autore,numeroPagine), ripiano, posizione);
-                        System.out.println("Volume aggiunto correttamente");
-                    } 
-                    catch (EccezioneRipianoNonValido ex) 
-                    {
-                         System.out.println("Ripiano inesistente");
-                    } 
-                    catch (EccezionePosizioneNonValida ex) 
-                    {
-                          System.out.println("Posizione inesistente");
-                    } 
-                    catch (EccezionePosizioneOccupata ex)
-                    {
-                        System.out.println("Posizione già occupata");
+                        System.out.println("Titolo --> ");
+                        titolo=tastiera.readString();                       
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Autore --> ");
+                                autore=tastiera.readString();
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true);                                
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Numero pagine --> ");
+                                numeroPagine=tastiera.readInt();
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true); 
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Ripiano (0..4) --> ");
+                                ripiano=tastiera.readInt();
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true);                                                
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Posizione (0..14) --> ");
+                                posizione=tastiera.readInt();
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true);
+                        
+                        try
+                        {
+                            s1.setLibro(new Libro(titolo,autore,numeroPagine), ripiano, posizione);
+                            System.out.println("Volume aggiunto correttamente");
+                        }
+                        catch (EccezioneRipianoNonValido ex) 
+                        {
+                             System.out.println("Ripiano inesistente");
+                        } 
+                        catch (EccezionePosizioneNonValida ex) 
+                        {
+                              System.out.println("Posizione inesistente");
+                        } 
+                        catch (EccezionePosizioneOccupata ex)
+                        {
+                            System.out.println("Posizione già occupata");
+                        }
                     }
-                    break;
-
+                    catch(IOException e)
+                    {
+                        System.out.println("impossibile leggere da statsiera");
+                    }
+                    break;                    
                 case 3:
-                    System.out.println("Ripiano (0..4) --> ");
-                    ripiano=tastiera.nextInt();
-                    System.out.println("Posizione (0..14) --> ");
-                    posizione=tastiera.nextInt();  
-                
                     try 
                     {
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Ripiano (0..4) --> ");
+                                ripiano=tastiera.readInt();
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true);                                                
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Posizione (0..14) --> ");
+                                posizione=tastiera.readInt(); 
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true);
                         lib=s1.getLibro(ripiano, posizione);
                          System.out.println("Libro cercato: "+lib.toString());
                     } 
@@ -119,22 +190,41 @@ public class App
                     {
                         System.out.println("Libro non trovato!");
                     }
-                
-                                      
-                    
-                    
-                    
+                    catch(IOException e)
+                    {
+                        System.out.println("Impossibile scrivere da stiera");
+                    }
                     break;
 
-                case 4:
-                    System.out.println("Ripiano (0..4) --> ");
-                    ripiano=tastiera.nextInt();
-                    System.out.println("Posizione (0..14) --> ");
-                    posizione=tastiera.nextInt(); 
-                    
-                
+                case 4://Mostra libri di un autore                  
                     try 
                     {
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Ripiano (0..4) --> ");
+                                ripiano=tastiera.readInt();
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true);                                                
+                        do
+                        {
+                            try
+                            {
+                                System.out.println("Posizione (0..14) --> ");
+                                posizione=tastiera.readInt(); 
+                                break;
+                            }
+                            catch(NumberFormatException e)
+                            {
+                                System.out.println("Errore! Devi inserire un numero!");
+                            }
+                        }while(true);
                         s1.rimuoviLibro(ripiano, posizione);
                         System.out.println("Volume rimosso correttamente");
                     } 
@@ -150,26 +240,35 @@ public class App
                     {
                           System.out.println("Posizione già vuota. Nessun libro è stato rimosso.");
                     }
+                    catch(IOException  e)
+                    {
+                        System.out.println("Impossibile leggere da tasriera");
+                    }
                                
                     break;
 
-                case 5:
-                    //svuoto buffer input
-                    System.out.println("Premi invio per continuare...");
-                    tastiera.nextLine();
-                    System.out.println("Autore --> ");
-                    autore=tastiera.nextLine();
-                    elencoTitoliAutore=s1.elencoTitoliAutore(autore);
-                    if(elencoTitoliAutore==null)
-                        System.out.println("Nessun libro presente");
-                    else
+                case 5://mostra libri autore
+                    try
                     {
-                        for(int i=0;i<elencoTitoliAutore.length;i++)
+                        System.out.println("Autore --> ");
+                        autore=tastiera.readString();
+                        elencoTitoliAutore=s1.elencoTitoliAutore(autore);
+                        if(elencoTitoliAutore==null)
+                        System.out.println("Nessun libro presente");
+                        else
                         {
-                            System.out.println(elencoTitoliAutore[i]);
+                            for(int i=0;i<elencoTitoliAutore.length;i++)
+                            {
+                                System.out.println(elencoTitoliAutore[i]);
+                            }
                         }
+                        break;
                     }
-                    break;
+                    catch(IOException e)
+                    {
+                        System.out.println("impossibile leggere da tastiera");
+                    }
+                    
                 case 6:
                     libriPresenti=s1.elencoLibriPresenti();
                     libriPresenti=Ordinatore.selectionSortCrescenteLibri(libriPresenti);
