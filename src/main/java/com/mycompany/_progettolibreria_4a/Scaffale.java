@@ -6,7 +6,13 @@ package com.mycompany._progettolibreria_4a;
 
 import eccezioni.EccezionePosizioneNonValida;
 import eccezioni.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilita.TextFile;
@@ -17,7 +23,7 @@ import utilita.TextFile;
  * contenere dei libri.
  * @author gian
  */
-public class Scaffale 
+public class Scaffale implements Serializable
 {
     private Mensola[] ripiani; //array di mensole
     private final static int NUM_RIPIANI=5;
@@ -403,5 +409,22 @@ public class Scaffale
             //E' finito il file di testo
             f1.close();
         }
+   }
+   
+   public void salvaScaffale(String fileName) throws FileNotFoundException, IOException
+   {
+       ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(fileName));
+       writer.writeObject(this);
+       writer.flush();
+       writer.close();              
+   }
+   
+   public Scaffale caricaScaffale(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException
+   {
+       Scaffale s;
+       ObjectInputStream reader = new ObjectInputStream(new FileInputStream(fileName));
+       s = (Scaffale) reader.readObject();
+       reader.close();
+       return s;
    }
 }

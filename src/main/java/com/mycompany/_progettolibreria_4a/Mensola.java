@@ -4,6 +4,7 @@
  */
 package com.mycompany._progettolibreria_4a;
 import eccezioni.*;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,7 +12,7 @@ import java.util.logging.Logger;
  *
  * @author gian
  */
-public class Mensola 
+public class Mensola implements Serializable
 {
     private Libro[] volumi;
     private final static int NUM_MAX_VOLUMI=15;

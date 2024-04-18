@@ -27,7 +27,7 @@ public class App
     {
        
         String[] vociMenu;
-        int numeroVoci=9;
+        int numeroVoci=11;
         vociMenu=new String[numeroVoci];
         Menu menu;
         int voceScelta;
@@ -42,6 +42,7 @@ public class App
         String[] elencoTitoliAutore;
         Libro[] libriPresenti;
         String nomeFile = "volumi.csv";
+        String nomeFileBinario = "scaffale.bin";
         
         vociMenu[0]="\t--> Esci";
         vociMenu[1]="\t--> Visualizza tutti i volumi presenti";
@@ -52,6 +53,8 @@ public class App
         vociMenu[6]="\t--> Mostra libri presenti in ordine alfabetico di titolo";
         vociMenu[7]="\t--> Esporta i volumi su file CSV";
         vociMenu[8]="\t--> Importa i volumi da file CSV";
+        vociMenu[9]="\t--> Salva dati scaffale";
+        vociMenu[10]="\t--> Carica dati scaffale";
         
         menu=new Menu(vociMenu);
        
@@ -300,15 +303,40 @@ public class App
                     try 
                     {
                         s1.importaCSV(nomeFile);
+                        System.out.println("Impostazione avvenuta con successo!");
                     } 
                     catch (IOException ex) 
                     {
                         System.out.println("Impossibile leggere da file");
-                    }
-                
+                    }               
                     break;
-
-                }
+                case 9:
+                    try
+                    {
+                        s1.salvaScaffale(nomeFileBinario);
+                        System.out.println("Salvataggio avvenuto correttamente");
+                    }
+                    catch(IOException ex)
+                    {
+                        System.out.println("Impossibile salvare su file");
+                    }
+                    break;
+                case 10: 
+                    try {
+                        //carica scaffale
+                        s1=s1.caricaScaffale(nomeFileBinario);
+                        System.out.println("Caricamnto avvenuto con successo");
+                    } 
+                    catch (IOException ex) 
+                    {
+                        System.out.println("Impossibile leggere da file");
+                    } 
+                    catch (ClassNotFoundException ex) 
+                    {
+                        System.out.println("Impossibile leggere i dati dello scaffale");
+                    }
+                    break; 
+            }
                     
         }while(voceScelta!=0);
         
